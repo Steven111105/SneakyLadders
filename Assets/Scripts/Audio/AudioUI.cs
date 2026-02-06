@@ -10,9 +10,9 @@ public class AudioUI : MonoBehaviour
     public Slider sfxSlider;
     void Start()
     {
-        masterSlider.value = PlayerPrefs.GetFloat("MasterVol01", 1f);
-        musicSlider.value = PlayerPrefs.GetFloat("MusicVol01", 1f);
-        sfxSlider.value = PlayerPrefs.GetFloat("SFXVol01", 1f);
+        masterSlider.value = PlayerPrefs.GetFloat("MasterVol", 1f);
+        musicSlider.value = PlayerPrefs.GetFloat("MusicVol", 1f);
+        sfxSlider.value = PlayerPrefs.GetFloat("SFXVol", 1f);
 
         AudioManager.instance?.SetMusicVolume(masterSlider.value);
         AudioManager.instance?.SetMusicVolume(musicSlider.value);
@@ -20,15 +20,15 @@ public class AudioUI : MonoBehaviour
 
         masterSlider.onValueChanged.AddListener(v => {
             AudioManager.instance?.SetMasterVolume(v);
-            PlayerPrefs.SetFloat("MasterVol01", v);
+            PlayerPrefs.SetFloat("MasterVol", v);
         });
         musicSlider.onValueChanged.AddListener(v => {
             AudioManager.instance?.SetMusicVolume(v);
-            PlayerPrefs.SetFloat("MusicVol01", v);
+            PlayerPrefs.SetFloat("MusicVol", v);
         });
         sfxSlider.onValueChanged.AddListener(v => {
             AudioManager.instance?.SetSFXVolume(v);
-            PlayerPrefs.SetFloat("SFXVol01", v);
+            PlayerPrefs.SetFloat("SFXVol", v);
         });
     }
 }

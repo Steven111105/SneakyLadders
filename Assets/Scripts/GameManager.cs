@@ -13,15 +13,12 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     [SerializeField] Effects currentPlayerEffect = Effects.None;
     [SerializeField] Effects currentEnemyEffect = Effects.None;
-    public SnakeAndLadderSO snakeAndLadderData;
+    public BoardDataSO boardData;
     public bool isPlayerTurn = true;
     public bool canRollDice = true;
     public int playerPosition = 0;
     public int enemyPosition = 0;
-    public class Grid
-    {
-        public Tile[] tiles = new Tile[100];
-    }
+    Tile[] grid;
 
     public struct Tile
     {
@@ -29,6 +26,24 @@ public class GameManager : MonoBehaviour
         public bool hasLadder;
         public int snakeEndPos;
         public int ladderEndPos;
+        public TileColor tileColor;
+        public enum TileColor
+        {
+            Red,
+            Blue,
+            Green,
+            Yellow,
+            White
+        };
+
+        public Tile(bool a)
+        {
+            hasSnake = false;
+            hasLadder = false;
+            snakeEndPos = -1;
+            ladderEndPos = -1;
+            tileColor = TileColor.White;
+        }
     }
 
     void Start()
@@ -38,19 +53,44 @@ public class GameManager : MonoBehaviour
 
     void InitializeGrid()
     {
-        // Grid grid = new Grid();
+        grid = new Tile[100];
 
-        // foreach(var snake in snakeAndLadderData.snakes)
-        // {
-        //     grid.tiles[snake.startPos].hasSnake = true;
-        //     grid.tiles[snake.startPos].snakeEndPos = snake.endPos;
-        // }
+        foreach(int index in boardData.redTiles)
+        {
+            grid[index].tileColor = Tile.TileColor.Red;
+        }
 
-        // foreach(var ladder in snakeAndLadderData.ladders)
-        // {
-        //     grid.tiles[ladder.startPos].hasLadder = true;
-        //     grid.tiles[ladder.startPos].ladderEndPos = ladder.endPos;
-        // }
+        foreach(int index in boardData.blueTiles)
+        {
+            grid[index].tileColor = Tile.TileColor.Blue;
+        }
+
+        foreach(int index in boardData.greenTiles)
+        {
+            grid[index].tileColor = Tile.TileColor.Green;
+        }
+
+        foreach(int index in boardData.yellowTiles)
+        {
+            grid[index].tileColor = Tile.TileColor.Yellow;
+        }
+
+        foreach(int index in boardData.whiteTiles)
+        {
+            grid[index].tileColor = Tile.TileColor.White;
+        }
+
+        foreach(var snake in boardData.snakes)
+        {
+            grid[snake.startPos].hasSnake = true;
+            grid[snake.startPos].snakeEndPos = snake.endPos;
+        }
+
+        foreach(var ladder in boardData.ladders)
+        {
+            grid[ladder.startPos].hasLadder = true;
+            grid[ladder.startPos].ladderEndPos = ladder.endPos;
+        }
     }
 
     public int CalculateEnd(int startPos, int diceOutcome, Effects effects)
