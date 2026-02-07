@@ -5,5 +5,5 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "DialogDatabase", menuName = "ScriptableObjects/DialogDatabase")]
 public class DialogDatabase : ScriptableObject
 {
-    public DialogSO[] dialogSO;
+    public List<DialogSO> dialogSO;
 }
