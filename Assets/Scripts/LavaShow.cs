@@ -16,6 +16,7 @@ public class LavaShow : MonoBehaviour
 
     void Start()
     {
+        boardImage = GetComponent<Image>();
         StartCoroutine(ShowPathBoard());
     }
     IEnumerator ShowPathBoard()

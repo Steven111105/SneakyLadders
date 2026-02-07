@@ -17,9 +17,14 @@ public class BulletGenerator : MonoBehaviour
     }
     void Start()
     {
+        Invoke("StartSpawningBullets", 2.5f);
+    }
+    void StartSpawningBullets()
+    {
         birdHostile = false;
         StartCoroutine(ShootBullets());
         StartCoroutine(SpawnItems());
+        
     }
     IEnumerator ShootBullets()
     {
@@ -41,7 +46,7 @@ public class BulletGenerator : MonoBehaviour
         int index = 0;
         while(index < 4)
         {
-            yield return new WaitForSeconds(15f);
+            yield return new WaitForSeconds(13f);
             Vector2 spawnPos = Random.insideUnitCircle * 5f;
             GameObject item = Instantiate(items[index], spawnPos, Quaternion.identity);
             item.SetActive(true);

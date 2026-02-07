@@ -8,6 +8,7 @@ public class TransitionManager : MonoBehaviour
     public static TransitionManager instance;
     public Image solidColorImage;
     public GameObject youDiedPanel;
+    bool retryButtonPressed;
     AsyncOperation asyncLoad;
 
     private void Awake()
@@ -15,6 +16,11 @@ public class TransitionManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+            solidColorImage.color = new Color(1, 1, 1, 0);
+            solidColorImage.raycastTarget = false;
+            solidColorImage.gameObject.SetActive(false);
+
+            youDiedPanel.SetActive(false);
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -25,6 +31,12 @@ public class TransitionManager : MonoBehaviour
 
     public void FadeWhite(string sceneName)
     {
+        if(asyncLoad != null)
+            return;
+        Debug.Log("Fading to white and loading scene: " + sceneName);
+        solidColorImage.gameObject.SetActive(true);
+        solidColorImage.raycastTarget = true;
+        solidColorImage.color = new Color(1, 1, 1, 0);
         asyncLoad = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName);
         asyncLoad.allowSceneActivation = false;
         StartCoroutine(FadeToWhite(1f));
@@ -42,7 +54,9 @@ public class TransitionManager : MonoBehaviour
             yield return null;
         }
         solidColorImage.color = targetColor;
+        Debug.Log("Scene loaded, allow scene activation.");
         asyncLoad.allowSceneActivation = true;
+        asyncLoad = null;
         StartCoroutine(FadeToClear(1f));
     }
 
@@ -58,17 +72,21 @@ public class TransitionManager : MonoBehaviour
             yield return null;
         }
         solidColorImage.color = targetColor;
+        solidColorImage.raycastTarget = false;
+        solidColorImage.gameObject.SetActive(false);
     }
 
-
-    public void ShowYouDiedPanel()
+    public void ShowYouDiedPanel(string repeatSceneName)
     {
+        retryButtonPressed = false;
         youDiedPanel.SetActive(true);
-        StartCoroutine(FadeDiedScreen());
-    }
+        StartCoroutine(FadeDiedScreen(repeatSceneName));
+    }    
 
-    IEnumerator FadeDiedScreen()
+    IEnumerator FadeDiedScreen(string repeatSceneName)
     {
+        AsyncOperation asyncLoad = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(repeatSceneName);
+        asyncLoad.allowSceneActivation = false;
         CanvasGroup canvasGroup = youDiedPanel.GetComponent<CanvasGroup>();
         float duration = 1f;
         float t = 0;
@@ -78,7 +96,14 @@ public class TransitionManager : MonoBehaviour
             canvasGroup.alpha = Mathf.Lerp(0, 1, t / duration);
             yield return null;
         }
-        yield return new WaitForSeconds(0.75f);
-        
+        yield return new WaitUntil(() => retryButtonPressed == true);
+        Debug.Log("Retry button pressed, reloading scene.");
+        asyncLoad.allowSceneActivation = true;
+    }
+
+    public void OnRetryButtonPressed()
+    {
+        youDiedPanel.SetActive(false);
+        retryButtonPressed = true;
     }
 }

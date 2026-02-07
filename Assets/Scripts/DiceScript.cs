@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class DiceScript : MonoBehaviour
 {
+    public static DiceScript instance;
     Image diceImage;
     public Sprite[] diceFaces;
     public Sprite[] upDiceFaces;
@@ -15,6 +16,11 @@ public class DiceScript : MonoBehaviour
     int leftCrackIndex = 0;
     public Sprite[] rightDiceFaces;
     int rightCrackIndex = 0;
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     private void Start()
     {
@@ -122,6 +128,10 @@ public class DiceScript : MonoBehaviour
                 }
                 break;
         }
-        
+    }
+
+    private void OnDestroy()
+    {
+        instance = null;
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -24,12 +25,14 @@ public class ItemSpawing : MonoBehaviour
         if (isGreen)
         {
             AudioManager.instance.PlaySFX("CollectGreenItem");
-            SceneManager.LoadSceneAsync("LavaFloorScene");
+            TransitionManager.instance.FadeWhite("LavaFloorScene");
+            // SceneManager.LoadSceneAsync("LavaFloorScene");
         }
         else
         {
             AudioManager.instance.PlaySFX("CollectWhiteItem");
-            SceneManager.LoadSceneAsync("GrapplingScene");
+            TransitionManager.instance.ShowYouDiedPanel("GrapplingScene");
+            // SceneManager.LoadSceneAsync("GrapplingScene");
         }
     }
 }

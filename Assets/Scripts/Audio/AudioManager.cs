@@ -40,6 +40,11 @@ public class AudioManager : MonoBehaviour
         {
             Debug.Log("AudioManager instance already exists, destroying object!");
             // there is already an instance of AudioManager
+            if(masterSlider == null || bgmSlider == null || sfxSlider == null)
+            {
+                Destroy(gameObject);
+                return;
+            }
             // Clear the old listeners
             instance.masterSlider?.onValueChanged.RemoveAllListeners();
             instance.bgmSlider?.onValueChanged.RemoveAllListeners();
@@ -89,20 +94,20 @@ public class AudioManager : MonoBehaviour
     void SetMasterVolume(float volume)
     {
         audioMixer.SetFloat("MasterVolume", Mathf.Log10(volume) * 20);
-        Debug.Log("Master Volume set to: " + volume);
+        // Debug.Log("Master Volume set to: " + volume);
         PlayerPrefs.SetFloat("MasterVolume", volume);
     }
     void SetBGMVolume(float volume)
     {
         audioMixer.SetFloat("BGMVolume", Mathf.Log10(volume) * 20);
-        Debug.Log("BGM Volume set to: " + volume);
+        // Debug.Log("BGM Volume set to: " + volume);
         PlayerPrefs.SetFloat("BGMVolume", volume);
     }
 
     void SetSfxVolume(float volume)
     {
         audioMixer.SetFloat("SFXVolume", Mathf.Log10(volume) * 20);
-        Debug.Log("SFX Volume set to: " + volume);
+        // Debug.Log("SFX Volume set to: " + volume);
         PlayerPrefs.SetFloat("SFXVolume", volume);
     }
 

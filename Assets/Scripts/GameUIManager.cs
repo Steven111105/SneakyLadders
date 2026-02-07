@@ -55,6 +55,8 @@ public class GameUIManager : MonoBehaviour
     void Start()
     {
         playerPositionIndex = -1;
+        lastMoveDirection = Direction.Right;
+        last2Direction = Direction.Right;
         InstantiateGridSlots();
     }
 
@@ -68,7 +70,7 @@ public class GameUIManager : MonoBehaviour
         slotOffset = slotSize / 2f;
         for(int i = 0; i < 100; i++)
         {
-            Debug.Log("Instantiating slot " + i);
+            // Debug.Log("Instantiating slot " + i);
             GameObject slot = Instantiate(gridSlotPrefab, gridParent);
             RectTransform rect = slot.GetComponent<RectTransform>();
             rect.anchorMin = new Vector2(0,0);
@@ -106,20 +108,20 @@ public class GameUIManager : MonoBehaviour
     Direction last2Direction;
     public void Move(int directionInt)
     {
+        // Note to bc: There dont get called btw idk
         if (!snakeTest.activeSelf && isPlayerIn)
         {
             ResetSnake(62);
         }
         else if (!snakeTest.activeSelf && !isPlayerIn)
         {
+            Debug.Log("Resetting snake to 3");
             ResetSnake(3);
         }
 
         if (!alreadyEatenBySnake)
         {
-
             Direction direction = (Direction)directionInt;
-            Debug.Log("Moving snake " + direction.ToString() + " last move dir: " + lastMoveDirection.ToString());
             switch(direction)
             {
                 case Direction.Up:
@@ -159,6 +161,7 @@ public class GameUIManager : MonoBehaviour
                     lastMoveDirection = Direction.Right;
                     break;
             }
+            DiceScript.instance?.CrackDice(direction);
             snake3.transform.position = snake2.transform.position;
             snake2.transform.position = snakeTest.transform.position;
             snakeTest.transform.position = gridParent.GetChild(snakeTile).position;
@@ -178,8 +181,7 @@ public class GameUIManager : MonoBehaviour
             {
                 AudioManager.instance.PlaySFX("EatPlayer");
                 alreadyEatenBySnake = true;
-                asyncLoad = SceneManager.LoadSceneAsync("GrapplingScene");
-                asyncLoad.allowSceneActivation = false;
+                TransitionManager.instance.FadeWhite("GrapplingScene");
             }
         }
         else
@@ -201,6 +203,7 @@ public class GameUIManager : MonoBehaviour
                 AudioManager.instance.PlaySFX("HitBomb");
                 lavaShow?.SteppedOnBomb();
                 ResetSnake(3);
+                TransitionManager.instance.FadeWhite("LavaFloorScene");
             }
             else if(snakeTile + 1 > 30)
                 AudioManager.instance.PlaySFX("SafeLava");
@@ -267,6 +270,8 @@ public class GameUIManager : MonoBehaviour
         snakeTilePrevious = lastTile-1;
         snakeTilePrevious2 = lastTile-2;
         lastMoveDirection = Direction.Right;
+        last2Direction = Direction.Right;
+        SetSnakeSprite();
     }
 
     int snakeToPlayerIndex(int snakeIndex)
@@ -279,34 +284,6 @@ public class GameUIManager : MonoBehaviour
         else
         {            
             return (((row+1)*10) - snakeIndex%10)-1;
-        }
-    }
-
-    public void FadeToWhite()
-    {
-        StartCoroutine(FadeToWhiteCoroutine());
-    }
-
-    IEnumerator FadeToWhiteCoroutine()
-    {
-        float elapsedTime = 0f;
-        float fadeDuration = 1f;
-        Color startColor = new Color(1f, 1f, 1f, 0f);
-        Color endColor = new Color(1f, 1f, 1f, 1f);
-
-        while (elapsedTime < fadeDuration)
-        {
-            elapsedTime += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsedTime / fadeDuration);
-            fadePanelImage.color = Color.Lerp(startColor, endColor, t);
-            yield return null;
-        }
-
-        fadePanelImage.color = endColor;
-
-        if (asyncLoad != null)
-        {
-            asyncLoad.allowSceneActivation = true;
         }
     }
 }
