@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -19,6 +20,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] Slider sfxSlider;
     [SerializeField] AudioMixerGroup bgmMixerGroup;
     [SerializeField] AudioMixerGroup sfxMixerGroup;
+    [SerializeField] List<SFX> bgmList = new List<SFX>();
     [SerializeField] List<SFX> sfxList = new List<SFX>();
 
     private Transform sfxObject;
@@ -109,5 +111,51 @@ public class AudioManager : MonoBehaviour
             sfxSource.Play();
             Destroy(sfxSource, sfx.clip.length);
         }
+    }
+
+    public void PlayBGM(string bgmName)
+    {
+        SFX bgm = bgmList.Find(b => b.name == bgmName);
+        if (bgm != null)
+        {
+            StartCoroutine(FadeBGMOut(bgm));
+        }
+    }
+
+    IEnumerator FadeBGMOut(SFX targetBGM)
+    {
+        float startVolume = targetBGM.volume;
+        float t = 0f;
+        float duration = 0.5f;
+        while (targetBGM.volume > 0)
+        {
+            targetBGM.volume = Mathf.Lerp(startVolume, 0f, t / duration);
+            t += Time.deltaTime;
+            yield return null;
+        }
+
+        StartCoroutine(FadeBGMIn(targetBGM));
+    }
+
+    IEnumerator FadeBGMIn(SFX targetBGM)
+    {
+        float targetVolume = targetBGM.volume;
+        AudioSource bgmSource = gameObject.GetComponent<AudioSource>();
+        bgmSource.volume = 0f;
+        float t = 0f;
+        float duration = 0.5f;
+
+        bgmSource.clip = targetBGM.clip;
+        bgmSource.volume = targetBGM.volume;
+        bgmSource.outputAudioMixerGroup = bgmMixerGroup;
+        bgmSource.loop = true;
+
+        while (bgmSource.volume < targetVolume)
+        {
+            bgmSource.volume = Mathf.Lerp(0f, targetVolume, t / duration);
+            t += Time.deltaTime;
+            yield return null;
+        }
+        bgmSource.volume = targetVolume;
     }
 }
