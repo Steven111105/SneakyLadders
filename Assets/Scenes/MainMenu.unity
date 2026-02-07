@@ -974,7 +974,6 @@ GameObject:
   - component: {fileID: 579563089}
   - component: {fileID: 579563091}
   - component: {fileID: 579563090}
-  - component: {fileID: 579563092}
   m_Layer: 5
   m_Name: SettingsPanel
   m_TagString: Untagged
@@ -1046,21 +1045,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 579563088}
   m_CullTransparentMesh: 1
---- !u!114 &579563092
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 579563088}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3656a6c634fef21448c58581dbff2665, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  masterSlider: {fileID: 352186567}
-  musicSlider: {fileID: 1620807826}
-  sfxSlider: {fileID: 1715767370}
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -1692,7 +1676,8 @@ Transform:
   m_LocalPosition: {x: 1.0850084, y: 1.3204899, z: 0.0284282}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1370025459}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &1132226770
@@ -1948,7 +1933,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1170617489}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1012503884}
+        m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1170617489
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2212,6 +2209,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1318329083}
   m_CullTransparentMesh: 1
+--- !u!1 &1370025458
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1370025459}
+  m_Layer: 0
+  m_Name: SFXSourceParent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1370025459
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1370025458}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1132226769}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1372012286
 GameObject:
   m_ObjectHideFlags: 0

@@ -16,10 +16,16 @@ public class ItemSpawing : MonoBehaviour
     {
         if(collision.gameObject.tag != "Player")
             return;
-        
-        if(isGreen)
+
+        if (isGreen)
+        {
+            AudioManager.instance.PlaySFX("CollectGreenItem");
             SceneManager.LoadSceneAsync("LavaFloorScene");
+        }
         else
+        {
+            AudioManager.instance.PlaySFX("CollectWhiteItem");
             SceneManager.LoadSceneAsync("GrapplingScene");
+        }
     }
 }

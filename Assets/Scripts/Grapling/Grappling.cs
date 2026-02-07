@@ -21,10 +21,11 @@ public class Grappling : MonoBehaviour
         // Then normalize direction, call raycast til hit wall
         Vector2 direction = (mousePos - playerPos).normalized;
 
-        gunObject.transform.localEulerAngles = new Vector3(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + 90f);
+        gunObject.transform.localEulerAngles = new Vector3(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
         
         if(Input.GetMouseButtonDown(0))
         {
+            AudioManager.instance.PlaySFX("ShootGrapple");
             LaunchGrapple(direction);
         }
 

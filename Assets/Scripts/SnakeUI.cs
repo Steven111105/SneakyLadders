@@ -22,6 +22,7 @@ public class SnakeUI : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        AudioManager.instance.PlaySFX("SnakeBloat");
         snakeHPBar.gameObject.SetActive(true);
         snakeCurrentHP -= damage;
         if(snakeCurrentHP < 0)

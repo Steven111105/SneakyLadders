@@ -64,35 +64,32 @@ public class GameUIManager : MonoBehaviour
             // slot.GetComponent<GridSlot>().slotIndex = i;
         }
 
-        snakeTest.transform.localPosition = gridParent.GetChild(snakeTile).localPosition;
-        snake2.transform.localPosition = gridParent.GetChild(snakeTile - 1).localPosition;
-        snake3.transform.localPosition = gridParent.GetChild(snakeTile - 2).localPosition;
+        snakeTest.transform.position = gridParent.GetChild(snakeTile).position;
+        snake2.transform.position = gridParent.GetChild(snakeTile - 1).position;
+        snake3.transform.position = gridParent.GetChild(snakeTile - 2).position;
 
         alreadyEatenBySnake = false;
-        hasResetSnake = false;
     }
 
     public void SnapToSlot(GameObject playerObject, int slotIndex)
     {
         if(slotIndex >= 100)
             slotIndex = 99;
-        playerObject.transform.localPosition = gridParent.transform.GetChild(slotIndex).localPosition;
+        playerObject.transform.position = gridParent.transform.GetChild(slotIndex).position;
     }
 
     bool alreadyEatenBySnake = false;
-    bool hasResetSnake = false;
     public void Move(int directionInt)
     {
-        if (hasResetSnake)
+        if (!snakeTest.activeSelf && isPlayerIn)
         {
-            Debug.Log("Dice Breaks!");
-            return;
+            ResetSnake(62);
+        }
+        else if (!snakeTest.activeSelf && !isPlayerIn)
+        {
+            ResetSnake(3);
         }
 
-        if (!snakeTest.activeSelf)
-        {
-            ResetSnake();
-        }
         if (!alreadyEatenBySnake)
         {
             if(isPlayerIn)
@@ -107,42 +104,44 @@ public class GameUIManager : MonoBehaviour
                     if(snakeTile + 10 > 99 || Direction.Down == lastMoveDirection)
                         return;
                     snakeTile += 10;
-                    snake3.transform.localPosition = snake2.transform.localPosition;
-                    snake2.transform.localPosition = snakeTest.transform.localPosition;
-                    snakeTest.transform.localPosition = gridParent.GetChild(snakeTile).localPosition;
+                    snake3.transform.position = snake2.transform.position;
+                    snake2.transform.position = snakeTest.transform.position;
+                    snakeTest.transform.position = gridParent.GetChild(snakeTile).position;
                     lastMoveDirection = Direction.Up;
                     break;
                 case Direction.Down:
                     if(snakeTile - 10 < 0 || Direction.Up == lastMoveDirection)
                         return;
                     snakeTile -= 10;
-                    snake3.transform.localPosition = snake2.transform.localPosition;
-                    snake2.transform.localPosition = snakeTest.transform.localPosition;
-                    snakeTest.transform.localPosition = gridParent.GetChild(snakeTile).localPosition;
+                    snake3.transform.position = snake2.transform.position;
+                    snake2.transform.position = snakeTest.transform.position;
+                    snakeTest.transform.position = gridParent.GetChild(snakeTile).position;
                     lastMoveDirection = Direction.Down;
                     break;
                 case Direction.Left:
                     if(snakeTile % 10 == 0 || Direction.Right == lastMoveDirection)
                         return;
                     snakeTile -= 1;
-                    snake3.transform.localPosition = snake2.transform.localPosition;
-                    snake2.transform.localPosition = snakeTest.transform.localPosition;
-                    snakeTest.transform.localPosition = gridParent.GetChild(snakeTile).localPosition;
+                    snake3.transform.position = snake2.transform.position;
+                    snake2.transform.position = snakeTest.transform.position;
+                    snakeTest.transform.position = gridParent.GetChild(snakeTile).position;
                     lastMoveDirection = Direction.Left;
                     break;
                 case Direction.Right:
                     if(snakeTile % 10 == 9 || Direction.Left == lastMoveDirection)
                         return;
                     snakeTile += 1;
-                    snake3.transform.localPosition = snake2.transform.localPosition;
-                    snake2.transform.localPosition = snakeTest.transform.localPosition;
-                    snakeTest.transform.localPosition = gridParent.GetChild(snakeTile).localPosition;
+                    snake3.transform.position = snake2.transform.position;
+                    snake2.transform.position = snakeTest.transform.position;
+                    snakeTest.transform.position = gridParent.GetChild(snakeTile).position;
                     lastMoveDirection = Direction.Right;
                     break;
             }
+            AudioManager.instance.PlaySFX("DiceStuck");
+            
             if(snakeTile == 3 && isPlayerIn)
             {
-                Debug.Log("Snake ate you!");
+                AudioManager.instance.PlaySFX("EatPlayer");
                 alreadyEatenBySnake = true;   
             }
         }
@@ -157,12 +156,16 @@ public class GameUIManager : MonoBehaviour
             if(snakeTile + 1 == pathData.finishIndex)
             {
                 Debug.Log("Snake reached the end!");
+                SceneManager.LoadSceneAsync("MainMenu");
             }
             else if(snakeTile + 1 == pathData.pathIndexs.Find(x => x == snakeTile + 1))
             {
-                SceneManager.LoadSceneAsync("LavaFloorScene");
+                AudioManager.instance.PlaySFX("HitBomb");
+                ResetSnake(3);
             }
-        }
+            else if(snakeTile + 1 > 30)
+                AudioManager.instance.PlaySFX("SafeLava");
+        }  
     }
 
     public void HideSnake()
@@ -172,17 +175,16 @@ public class GameUIManager : MonoBehaviour
         snake3.SetActive(false);
     }
 
-    public void ResetSnake()
+    public void ResetSnake(int lastTile)
     {
-        snakeTile = 62;
         alreadyEatenBySnake = false;
         snakeTest.SetActive(true);
         snake2.SetActive(true);
         snake3.SetActive(true);
-        snakeTest.transform.localPosition = gridParent.GetChild(62).localPosition;
-        snake2.transform.localPosition = gridParent.GetChild(61).localPosition;
-        snake3.transform.localPosition = gridParent.GetChild(60).localPosition;
-        hasResetSnake = true;
+        snakeTest.transform.position = gridParent.GetChild(lastTile).position;
+        snake2.transform.position = gridParent.GetChild(lastTile - 1).position;
+        snake3.transform.position = gridParent.GetChild(lastTile - 2).position;
+        snakeTile = lastTile;
+        lastMoveDirection = Direction.Up;
     }
-
 }

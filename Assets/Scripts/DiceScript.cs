@@ -25,6 +25,7 @@ public class DiceScript : MonoBehaviour
 
     IEnumerator AnimateDiceRoll()
     {
+        AudioManager.instance.PlaySFX("DiceRoll");
         float rollDuration = 1f;
         float t = 0;
         while (t < rollDuration)

@@ -23,6 +23,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] List<SFX> bgmList = new List<SFX>();
     [SerializeField] List<SFX> sfxList = new List<SFX>();
 
+    public  bool isTest = false;
     private Transform sfxObject;
 
     private void Awake()
@@ -32,7 +33,7 @@ public class AudioManager : MonoBehaviour
             Debug.Log("only one AudioManager instance");
             instance = this;
             DontDestroyOnLoad(gameObject);
-            sfxObject = transform.GetChild(1);
+            sfxObject = transform.GetChild(0);
             SetSlidersListeners();
         }
         else
@@ -40,14 +41,16 @@ public class AudioManager : MonoBehaviour
             Debug.Log("AudioManager instance already exists, destroying object!");
             // there is already an instance of AudioManager
             // Clear the old listeners
-            instance.masterSlider.onValueChanged.RemoveAllListeners();
-            instance.bgmSlider.onValueChanged.RemoveAllListeners();
-            instance.sfxSlider.onValueChanged.RemoveAllListeners();
-
-            // assign the new sliders to the existing instance
+            instance.masterSlider?.onValueChanged.RemoveAllListeners();
+            instance.bgmSlider?.onValueChanged.RemoveAllListeners();
+            instance.sfxSlider?.onValueChanged.RemoveAllListeners();
+            
             instance.masterSlider = masterSlider;
             instance.bgmSlider = bgmSlider;
             instance.sfxSlider = sfxSlider;
+
+            // assign the new sliders to the existing instance
+
 
             // set the listeners to the new sliders
             instance.SetSlidersListeners();
@@ -63,6 +66,10 @@ public class AudioManager : MonoBehaviour
 
     void SetSlidersListeners()
     {
+        masterSlider.minValue = 0.1f;
+        bgmSlider.minValue = 0.1f;
+        sfxSlider.minValue = 0.1f;
+
         masterSlider.onValueChanged.AddListener(instance.SetMasterVolume);
         bgmSlider.onValueChanged.AddListener(instance.SetBGMVolume);
         sfxSlider.onValueChanged.AddListener(instance.SetSfxVolume);
@@ -115,6 +122,11 @@ public class AudioManager : MonoBehaviour
 
     public void PlayBGM(string bgmName)
     {
+        if(bgmName == null)
+        {
+            GetComponent<AudioSource>().Stop();
+            return;
+        }
         SFX bgm = bgmList.Find(b => b.name == bgmName);
         if (bgm != null)
         {
@@ -149,6 +161,7 @@ public class AudioManager : MonoBehaviour
         bgmSource.volume = targetBGM.volume;
         bgmSource.outputAudioMixerGroup = bgmMixerGroup;
         bgmSource.loop = true;
+        bgmSource.Play();
 
         while (bgmSource.volume < targetVolume)
         {

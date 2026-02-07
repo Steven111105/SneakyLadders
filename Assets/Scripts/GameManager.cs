@@ -15,7 +15,6 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        DontDestroyOnLoad(gameObject);
     }
     
     public void HandleSnakeKilled()
@@ -23,7 +22,10 @@ public class GameManager : MonoBehaviour
         Debug.Log("Snake has been killed!");
         GameUIManager.instance.HideSnake();
 
+        AudioManager.instance.PlaySFX("SnakeExplode");
+        AudioManager.instance.PlayBGM(null);
         // Change scene to grapling
+        instance = null;
         SceneManager.LoadSceneAsync("GrapplingScene");
     }
 }
