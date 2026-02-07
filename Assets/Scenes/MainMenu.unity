@@ -1922,10 +1922,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e20442b4616e083408ff7a487f11c0d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  masterSource: {fileID: 330654805}
-  musicSource: {fileID: 1811641930}
-  sfxSource: {fileID: 428789513}
-  mixer: {fileID: 24100000, guid: c05e0895a38c284498987151e4505278, type: 2}
+  audioMixer: {fileID: 24100000, guid: c05e0895a38c284498987151e4505278, type: 2}
+  masterSlider: {fileID: 352186567}
+  bgmSlider: {fileID: 1620807826}
+  sfxSlider: {fileID: 1715767370}
+  bgmMixerGroup: {fileID: -707569834186738191, guid: c05e0895a38c284498987151e4505278, type: 2}
+  sfxMixerGroup: {fileID: 4896038588476353999, guid: c05e0895a38c284498987151e4505278, type: 2}
+  sfxList: []
 --- !u!4 &1132226769
 Transform:
   m_ObjectHideFlags: 0
