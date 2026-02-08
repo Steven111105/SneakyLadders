@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
 
         AudioManager.instance.PlaySFX("SnakeExplode");
         AudioManager.instance.PlayBGM(null);
+        PlayerUI.instance.ChangeToPawn();
         // Change scene to grapling
         instance = null;
         TransitionManager.instance.FadeColor("GrapplingScene", new Color(1, 1, 1, 0), Color.white);

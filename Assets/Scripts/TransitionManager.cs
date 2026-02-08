@@ -85,6 +85,8 @@ public class TransitionManager : MonoBehaviour
         retryButtonPressed = false;
         youDiedPanel.SetActive(true);
         StartCoroutine(FadeDiedScreen(repeatSceneName));
+        Time.timeScale = 0f;
+        isInTransition = true;
     }    
 
     IEnumerator FadeDiedScreen(string repeatSceneName)
@@ -96,13 +98,14 @@ public class TransitionManager : MonoBehaviour
         float t = 0;
         while (t < duration)
         {
-            t += Time.deltaTime;
+            t += Time.unscaledDeltaTime;
             canvasGroup.alpha = Mathf.Lerp(0, 1, t / duration);
             yield return null;
         }
         yield return new WaitUntil(() => retryButtonPressed == true);
         Debug.Log("Retry button pressed, reloading scene.");
         asyncLoad.allowSceneActivation = true;
+        isInTransition = false;
     }
 
     public void OnRetryButtonPressed()

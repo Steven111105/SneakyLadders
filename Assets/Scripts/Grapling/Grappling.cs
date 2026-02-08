@@ -16,6 +16,8 @@ public class Grappling : MonoBehaviour
     }
     void Update()
     {
+        if(Time.timeScale == 0 || TransitionManager.instance.isInTransition || DialogManager.instance.isInDialog)
+            return;
         // Screen to world point direction
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 playerPos = PlayerUI.instance.playerGameObject.transform.position;

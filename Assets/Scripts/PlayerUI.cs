@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 public class PlayerUI : MonoBehaviour
 {
     public static PlayerUI instance;
+    public GameObject pawnObject;
     Canvas canvas;
     RectTransform rectTransform;
     public GameObject playerGameObject;
@@ -16,5 +17,11 @@ public class PlayerUI : MonoBehaviour
         playerGameObject = gameObject;
         canvas = GetComponentInParent<Canvas>();
         rectTransform = GetComponent<RectTransform>();
+    }
+
+    public void ChangeToPawn()
+    {
+        GetComponent<Image>().enabled = false;
+        pawnObject.SetActive(true);
     }
 }
